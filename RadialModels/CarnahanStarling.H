@@ -59,10 +59,7 @@ public:
     //- Runtime type information
     TypeName("CarnahanStarling");
 
-
-    // Constructors
-  
-        //- Construct from the coefficients dictionary
+    // Constructors  
         CarnahanStarling(const dictionary& coeffDict);
 
 
@@ -71,7 +68,6 @@ public:
 
 
     // Member Functions
-
 
         tmp<volScalarField> g0
         (

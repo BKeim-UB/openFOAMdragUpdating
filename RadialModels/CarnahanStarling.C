@@ -64,7 +64,6 @@ Foam::kineticTheoryModels::radialModels::CarnahanStarling::CarnahanStarling
 Foam::kineticTheoryModels::radialModels::CarnahanStarling::~CarnahanStarling()
 {}
 
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
@@ -131,7 +130,6 @@ Foam::kineticTheoryModels::radialModels::CarnahanStarling::g0
         {
             const volScalarField di = phasei.d();
             const volScalarField dm = phasem.d();
-            // *** FINAL FIX: Materialize tmp<> into a persistent volScalarField ***
             volScalarField term_d = di*dm / (di + dm);
 
             g0_im.set
@@ -193,7 +191,6 @@ Foam::kineticTheoryModels::radialModels::CarnahanStarling::g0prime
         {
             const volScalarField di = phasei.d();
             const volScalarField dm = phasem.d();
-            // *** FINAL FIX: Materialize tmp<> into a persistent volScalarField ***
             volScalarField term_d = di*dm / (di + dm);
 
             tmp<volScalarField> dT1 = 1.0/sqr(denominatorTerm);

@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
-  \\    /   O peration     | Website:  https://openfoam.org
-  \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
-  \\/     M anipulation  |
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Copyright (C) 2018-2022 OpenFOAM Foundation
+     \\/     M anipulation  |
   -------------------------------------------------------------------------------
   License
   This file is part of OpenFOAM.
@@ -16,8 +16,6 @@
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
   for more details.
-  You should have received a copy of the GNU General Public License
-  along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
 
@@ -36,7 +34,6 @@ namespace dragModels
     addToRunTimeSelectionTable(dragModel, carnahanStarlingSolidDrag, dictionary);
 }
 }
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //     
 
@@ -65,18 +62,16 @@ Foam::dragModels::carnahanStarlingSolidDrag::KSolidSolid
 
     volScalarField const_sum = 0.0/solid1.d();
     
-    //----------------------------------------------
-    //inserted
-    // --- MFIX-style RDF calculation for a TWO-SOLID system ---                                                                                            
+    // --- MFIX-style RDF (mansoori / carnahan-Starling) calculation
+
     const volScalarField zeta3 = alphas1 + alphas2;
     const volScalarField zeta2 = (alphas1 / solid1.d()) + (alphas2 / solid2.d());
 
-    const volScalarField term1 = 1.0 / (1.0 - zeta3 ); // removed small here 
-							    const volScalarField term2 = (3.0 * solid1.d() * solid2.d() / (solid1.d() + solid2.d())) * (zeta2 / sqr(1.0 - zeta3)); // and here
-    const volScalarField term3 = (2.0 * sqr(solid1.d() * solid2.d() / (solid1.d() + solid2.d()))) * (sqr(zeta2) / pow(1.0 - zeta3, 3)); // and here
+    const volScalarField term1 = 1.0 / (1.0 - zeta3 );
+    const volScalarField term2 = (3.0 * solid1.d() * solid2.d() / (solid1.d() + solid2.d())) * (zeta2 / sqr(1.0 - zeta3)); 
+    const volScalarField term3 = (2.0 * sqr(solid1.d() * solid2.d() / (solid1.d() + solid2.d()))) * (sqr(zeta2) / pow(1.0 - zeta3, 3));
 
     const volScalarField g0_ls = term1 + term2 + term3;
-    // ----------------------------------------------------------------------
     
     forAll(fluid.phases(), phaseIdx)
     {
@@ -90,8 +85,7 @@ Foam::dragModels::carnahanStarlingSolidDrag::KSolidSolid
 
     }
 
-    // --- Final drag calculation ---                                                                 
-    volScalarField fractNum =
+      volScalarField fractNum =
           3.0 * (1.0 + E_) * (Pi / 2.0 + Cf_ * sqr(Pi) / 8.0)
         * alphas1 * solid1.rho() * alphas2 * solid2.rho()
         * sqr(solid1.d() + solid2.d())
@@ -135,9 +129,6 @@ Foam::dragModels::carnahanStarlingSolidDrag::~carnahanStarlingSolidDrag()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::carnahanStarlingSolidDrag::K() const
 {
-  //  const phaseModel& solid1 = mesh().lookup<phaseModel>(solid1Name_);
-  //  const phaseModel& solid2 = mesh().lookup<phaseModel>(solid2Name_);
-
     const phaseModel& gas = interface_.fluid().phases()[gasName_];
     const phaseModel& solid1 = interface_.fluid().phases()[solid1Name_];
     const phaseModel& solid2 = interface_.fluid().phases()[solid2Name_];
